@@ -1,25 +1,46 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import AppointmentForm from './components/AppointmentForm';
+import AppointmentList from './components/AppointmentList';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [appointments, setAppointments] = useState([]);
+  const [currentAppointment, setCurrentAppointment] = useState(null);
+
+  const addAppointment = (appointment) => {
+    setAppointments([...appointments, appointment]);
+  };
+
+  const updateAppointment = (updatedAppointment) => {
+    setAppointments(appointments.map((appointment) =>
+      appointment === currentAppointment ? updatedAppointment : appointment
+    ));
+    setCurrentAppointment(null);
+  };
+
+  const editAppointment = (appointment) => {
+    setCurrentAppointment(appointment);
+  };
+
+  const deleteAppointment = (index) => {
+    setAppointments(appointments.filter((_, i) => i !== index));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Appointment Booking</h1>
+      <AppointmentForm
+        addAppointment={addAppointment}
+        currentAppointment={currentAppointment}
+        updateAppointment={updateAppointment}
+      />
+      <AppointmentList
+        appointments={appointments}
+        onEdit={editAppointment}
+        onDelete={deleteAppointment}
+      />
     </div>
   );
-}
+};
 
 export default App;
